@@ -16,34 +16,53 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
+    <div className="flex min-h-screen bg-gray-50">
 
-      {/* Top Bar (Mobile Friendly) */}
-      <div className="bg-slate-900 text-white p-4 text-center text-xl font-semibold shadow-md">
-        IoT Monitoring
+      {/* Sidebar */}
+      <div className="hidden md:flex flex-col w-64 bg-white border-r p-8 shadow-sm">
+        <h1 className="text-2xl font-bold text-gray-800 mb-10">
+          IoT Dashboard
+        </h1>
+
+        <div className="space-y-4 text-gray-600">
+          <div className="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg font-medium">
+            Dashboard
+          </div>
+          <div className="hover:bg-gray-100 px-4 py-2 rounded-lg cursor-pointer">
+            Profile
+          </div>
+          <div className="hover:bg-gray-100 px-4 py-2 rounded-lg cursor-pointer">
+            Settings
+          </div>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 p-6">
+      {/* Main Content */}
+      <div className="flex-1 p-6 md:p-12">
 
-        <h2 className="text-2xl font-semibold text-slate-700 mb-6 text-center">
-          Monitoring Sensor
+        {/* Mobile Header */}
+        <div className="md:hidden bg-white shadow-sm p-4 rounded-xl mb-6 text-center font-semibold text-gray-800">
+          IoT Dashboard
+        </div>
+
+        <h2 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-8">
+          Dashboard Monitoring
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* Temperature Card */}
-          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-8 rounded-3xl shadow-xl">
-            <h3 className="text-lg opacity-80">Temperature</h3>
-            <p className="text-4xl md:text-5xl font-bold mt-2">
+          <div className="bg-white p-8 rounded-2xl shadow-md border hover:shadow-lg transition">
+            <p className="text-gray-500 text-sm mb-2">Temperature</p>
+            <p className="text-4xl font-bold text-emerald-600">
               {temperature !== null ? `${temperature}°C` : "--"}
             </p>
           </div>
 
-          {/* Dummy Card */}
-          <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-8 rounded-3xl shadow-xl">
-            <h3 className="text-lg opacity-80">Dummy Sensor</h3>
-            <p className="text-4xl md:text-5xl font-bold mt-2">
+          {/* DO Virtual Card */}
+          <div className="bg-white p-8 rounded-2xl shadow-md border hover:shadow-lg transition">
+            <p className="text-gray-500 text-sm mb-2">DO Virtual</p>
+            <p className="text-4xl font-bold text-indigo-600">
               {temperature !== null ? (temperature / 10).toFixed(1) : "--"}
             </p>
           </div>
