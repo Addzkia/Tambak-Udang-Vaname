@@ -16,39 +16,34 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-slate-100">
-      
-      {/* Sidebar */}
-      <div className="w-64 bg-slate-900 text-slate-200 p-8 shadow-lg">
-        <h1 className="text-2xl font-bold mb-10 tracking-wide">
-          IoT Dashboard
-        </h1>
+    <div className="min-h-screen bg-slate-100 flex flex-col">
 
-        <div className="bg-slate-800 px-4 py-3 rounded-lg">
-          Dashboard
-        </div>
+      {/* Top Bar (Mobile Friendly) */}
+      <div className="bg-slate-900 text-white p-4 text-center text-xl font-semibold shadow-md">
+        IoT Monitoring
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-12">
-        <h2 className="text-3xl font-semibold text-slate-700 mb-10">
+      {/* Content */}
+      <div className="flex-1 p-6">
+
+        <h2 className="text-2xl font-semibold text-slate-700 mb-6 text-center">
           Monitoring Sensor
         </h2>
 
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* Temperature Card */}
-          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-10 rounded-2xl shadow-xl transition hover:scale-105 duration-300">
+          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-8 rounded-3xl shadow-xl">
             <h3 className="text-lg opacity-80">Temperature</h3>
-            <p className="text-5xl font-bold mt-2">
+            <p className="text-4xl md:text-5xl font-bold mt-2">
               {temperature !== null ? `${temperature}°C` : "--"}
             </p>
           </div>
 
           {/* Dummy Card */}
-          <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-10 rounded-2xl shadow-xl transition hover:scale-105 duration-300">
+          <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-8 rounded-3xl shadow-xl">
             <h3 className="text-lg opacity-80">Dummy Sensor</h3>
-            <p className="text-5xl font-bold mt-2">
+            <p className="text-4xl md:text-5xl font-bold mt-2">
               {temperature !== null ? (temperature / 10).toFixed(1) : "--"}
             </p>
           </div>
