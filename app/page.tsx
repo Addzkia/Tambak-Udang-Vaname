@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import mqtt from "mqtt";
 
 export default function Dashboard() {
   const [temperature, setTemperature] = useState<number | null>(null);
-  const [alertSent, setAlertSent] = useState(false); // anti spam
+  const alertSentRef = useRef(false); // anti spam tanpa re-render
 
   useEffect(() => {
-    const client = mqtt.connect("wss://broker.hivemq.com:8000/mqtt");
+    const client = mqtt.connect("wss://broker.emqx.io:8084/mqtt");
 
     client.on("connect", () => {
       console.log("Connected to MQTT");
@@ -20,9 +20,9 @@ export default function Dashboard() {
         const value = parseFloat(message.toString());
         setTemperature(value);
 
-        // 🔥 Jika suhu lebih dari 32°C dan belum kirim alert
-        if (value > 32 && !alertSent) {
-          setAlertSent(true);
+        // 🔥 Kirim notifikasi kalau suhu > 32
+        if (value > 32 && !alertSentRef.current) {
+          alertSentRef.current = true;
 
           await fetch("/api/sensor", {
             method: "POST",
@@ -33,9 +33,9 @@ export default function Dashboard() {
           });
         }
 
-        // Reset alert kalau suhu kembali normal
+        // Reset kalau suhu normal
         if (value <= 32) {
-          setAlertSent(false);
+          alertSentRef.current = false;
         }
       }
     });
@@ -47,7 +47,7 @@ export default function Dashboard() {
     return () => {
       client.end();
     };
-  }, [alertSent]);
+  }, []); // 🔥 kosong supaya tidak reconnect
 
   return (
     <div className="flex min-h-screen bg-slate-900">
