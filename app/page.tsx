@@ -1,19 +1,53 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import mqtt from "mqtt";
 
 export default function Dashboard() {
   const [temperature, setTemperature] = useState<number | null>(null);
+  const [alertSent, setAlertSent] = useState(false); // anti spam
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const res = await fetch("/api/sensor");
-      const data = await res.json();
-      setTemperature(data.temperature);
-    }, 3000);
+    const client = mqtt.connect("wss://broker.hivemq.com:8000/mqtt");
 
-    return () => clearInterval(interval);
-  }, []);
+    client.on("connect", () => {
+      console.log("Connected to MQTT");
+      client.subscribe("tambak/suhu");
+    });
+
+    client.on("message", async (topic, message) => {
+      if (topic === "tambak/suhu") {
+        const value = parseFloat(message.toString());
+        setTemperature(value);
+
+        // 🔥 Jika suhu lebih dari 32°C dan belum kirim alert
+        if (value > 32 && !alertSent) {
+          setAlertSent(true);
+
+          await fetch("/api/sensor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              alert: `⚠️ Suhu tinggi terdeteksi!\nNilai: ${value}°C`,
+            }),
+          });
+        }
+
+        // Reset alert kalau suhu kembali normal
+        if (value <= 32) {
+          setAlertSent(false);
+        }
+      }
+    });
+
+    client.on("error", (err) => {
+      console.error("MQTT error:", err);
+    });
+
+    return () => {
+      client.end();
+    };
+  }, [alertSent]);
 
   return (
     <div className="flex min-h-screen bg-slate-900">
